@@ -2,10 +2,43 @@ import { useEffect, useState } from "react";
 import "./App.css";
 
 const nestedTreeData = [
-  { id: 1, name: "Bob", text: "Fruits", date: "17 feb", parentId: 0 },
-  { id: 2, name: "Alice", text: "to Bob", date: "17 feb", parentId: 1 },
-  { id: 3, name: "Bob", text: "to Alice", date: "17 feb", parentId: 2 },
-  { id: 3, name: "Tom", text: "Cities", date: "17 feb", parentId: 0 },
+  {
+    id: 1,
+    name: "Bob",
+    text: "Fruits",
+    image:
+      "https://media.istockphoto.com/photos/businessman-silhouette-as-avatar-or-default-profile-picture-picture-id476085198?b=1&k=20&m=476085198&s=170667a&w=0&h=Ct4e1kIOdCOrEgvsQg4A1qeuQv944pPFORUQcaGw4oI=",
+    date: "17 feb",
+    parentId: 0,
+  },
+  {
+    id: 2,
+    name: "Alice",
+    text: "to Bob",
+
+    image: "https://www.w3schools.com/howto/img_avatar2.png",
+    date: "17 feb",
+    parentId: 1,
+  },
+  {
+    id: 3,
+    name: "Bob",
+    text: "to Alice",
+
+    image:
+      "https://media.istockphoto.com/photos/businessman-silhouette-as-avatar-or-default-profile-picture-picture-id476085198?b=1&k=20&m=476085198&s=170667a&w=0&h=Ct4e1kIOdCOrEgvsQg4A1qeuQv944pPFORUQcaGw4oI=",
+    date: "17 feb",
+    parentId: 2,
+  },
+  {
+    id: 3,
+    name: "Tom",
+    text: "Cities",
+    image:
+      "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000",
+    date: "17 feb",
+    parentId: 0,
+  },
   // { id: 4, text: "Citrus", parentId: 1 },
   // { id: 5, text: "Stone fruits", parentId: 1 },
   // { id: 6, text: "Berries", parentId: 1 },
@@ -64,8 +97,15 @@ export function Row({ item, level, children }) {
       >
         {/* avatar  */}
         <div className="avatar">
-          
-
+          {/* image */}
+          <div>
+            <img width={50} src={item.image} alt="" />
+          </div>
+          {/* content */}
+          <div>
+            <p>{item.name}</p>
+            <p>{item.date}</p>
+          </div>
         </div>
 
         <div>
