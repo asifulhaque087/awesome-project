@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
 const nestedTreeData = [
   {
@@ -124,7 +125,7 @@ export function Row({ item, level, children }) {
         </div>
         <div>
           <input
-            class={`${
+            className={`${
               isCollapsed && "hidden"
             } shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
             id="username"
@@ -160,12 +161,20 @@ export function Tree({ treeData, parentId = 0, level = 0 }) {
 }
 
 function App() {
-  const [treeData, setTreeData] = useState([]);
-  useEffect(() => {
-    setTreeData(getTreeData());
-  }, []);
+  // const [treeData, setTreeData] = useState([]);
+  // useEffect(() => {
+  //   setTreeData(getTreeData());
+  // }, []);
 
-  return <div className="m-52">{treeData && <Tree treeData={treeData} />}</div>;
+  // return <div className="m-52">{treeData && <Tree treeData={treeData} />}</div>;
+  return (
+    <div className="App">
+      <Routes>
+        <Route path="/" element={<div />} />
+        <Route path="/hello" element={<div>hola</div>} />
+      </Routes>
+    </div>
+  );
 }
 
 export default App;
