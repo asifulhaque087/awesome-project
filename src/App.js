@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import BlogDetailsPage from "./pages/BlogDetailsPage";
+import BlogListPage from "./pages/BlogListPage";
 const nestedTreeData = [
   {
     id: 1,
@@ -170,8 +172,8 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<div />} />
-        <Route path="/hello" element={<div>hola</div>} />
+        <Route path="/" element={<BlogListPage />} />
+        <Route path="/blogs/:id" element={<BlogDetailsPage />} />
       </Routes>
     </div>
   );
