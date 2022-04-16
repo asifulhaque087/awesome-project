@@ -2,7 +2,31 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const BlogListPage = () => {
+  const [state, setState] = useState({ title: "", content: null });
   const [modal, setModal] = useState(false);
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setState({ ...state, [name]: value });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!state.title) {
+      alert("Title must not be empty");
+      return;
+    }
+
+    if (!state.content) {
+      alert("Content must not be empty");
+      return;
+    }
+
+    console.log("submitting", state);
+  };
+
   return (
     <div>
       <section className="text-gray-600 body-font">
@@ -23,39 +47,95 @@ const BlogListPage = () => {
                 className="absolute z-10 top-0 left-0 right-0 bottom-0 bg-black opacity-80"
               />
               {/* actuall modal */}
-              <div className="fixed z-20 top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] mx-auto p-5 border w-full max-w-sm shadow-lg rounded-md bg-white">
-                <div className="mt-3 text-center">
-                  <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
-                    <svg
-                      className="h-6 w-6 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
+              {/* <div className="fixed z-20 top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] mx-auto p-5 border w-full max-w-sm shadow-lg rounded-md bg-white">
+                <form action="">
+                  <div className="mb-3">
+                    <input
+                      type="text"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="title"
+                    />
                   </div>
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">
-                    Successful!
-                  </h3>
-                  <div className="mt-2 px-7 py-3">
-                    <p className="text-sm text-gray-500">
-                      Account has been successfully registered!
-                    </p>
+                  <div>
+                    <textarea
+                      rows={4}
+                      className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Content..."
+                      defaultValue={""}
+                    />
                   </div>
-                  <div className="items-center px-4 py-3">
-                    <button
-                      id="ok-btn"
-                      className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
-                    >
-                      OK
-                    </button>
+                </form>
+              </div> */}
+              <div className="fixed z-20 top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] w-full max-w-md">
+                <div className="relative p-4 w-full max-w-2xl h-full md:h-auto">
+                  {/* Modal content */}
+                  <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    {/* Modal header */}
+                    <div className="flex justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
+                      <h3 className="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
+                        Add a new post
+                      </h3>
+                      <button
+                        onClick={() => setModal(false)}
+                        type="button"
+                        className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        <svg
+                          className="w-5 h-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    {/* Modal body */}
+                    <div className="p-6 space-y-6">
+                      <form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                          <input
+                            name="title"
+                            onChange={handleChange}
+                            type="text"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 focus:outline-none"
+                            placeholder="title"
+                          />
+                        </div>
+                        <div>
+                          <textarea
+                            name="content"
+                            onChange={handleChange}
+                            rows={4}
+                            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:outline-none"
+                            placeholder="Content..."
+                            defaultValue={""}
+                          />
+                        </div>
+                        <div>
+                          <button
+                            className="my-2 block text-white bg-indigo-500 hover:bg-blue-800  font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                            type="submit"
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                    {/* Modal footer */}
+                    {/* <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
+                      <button
+                        onClick={() => setModal(false)}
+                        type="button"
+                        className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                      >
+                        Decline
+                      </button>
+                    </div> */}
                   </div>
                 </div>
               </div>
