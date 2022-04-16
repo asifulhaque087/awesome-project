@@ -85,10 +85,9 @@ export function Row({ item, level, children }) {
     <div key={`section-${item.id}`}>
       <div
         className="flex flex-col gap-3 mb-3 border rounded p-4"
-        onClick={() => {
-          console.log("clicked");
-          setIsCollapsed(!isCollapsed);
-        }}
+        // onClick={() => {
+        //   setIsCollapsed(!isCollapsed);
+        // }}
         style={{
           marginLeft: `${level * 10}px`,
         }}
@@ -113,12 +112,31 @@ export function Row({ item, level, children }) {
         </div>
         {/*  */}
         <div>
-          <button className="text-blue-500 opacity-80">reply</button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsCollapsed(!isCollapsed);
+            }}
+            className="text-blue-500 opacity-80"
+          >
+            reply
+          </button>
+        </div>
+        <div>
+          <input
+            class={`${
+              isCollapsed && "hidden"
+            } shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+            id="username"
+            type="text"
+            placeholder="Username"
+          />
         </div>
       </div>
 
       {/* children */}
-      <div className={`children ${isCollapsed && "collapsed"}`}>{children}</div>
+      {/* <div className={`children ${isCollapsed && "collapsed"}`}>{children}</div> */}
+      <div className={`children`}>{children}</div>
     </div>
   );
 }
