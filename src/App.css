@@ -11,10 +11,10 @@
   flex-direction: column;
   gap: 3; */
 }
-.row .avatar {
+/* .row .avatar {
   display: flex;
   align-items: center;
-}
+} */
 .row .text {
   padding-left: 5px;
 }

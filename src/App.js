@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-
 const nestedTreeData = [
   {
     id: 1,
     name: "Bob",
-    text: "Fruits",
+    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, nulla optio veritatis vel nobis velit saepe similique illo impedit dicta modi laudantium nam, quae incidunt nemo accusantium. Exercitationem, tempore. Voluptatibus?",
     image:
       "https://media.istockphoto.com/photos/businessman-silhouette-as-avatar-or-default-profile-picture-picture-id476085198?b=1&k=20&m=476085198&s=170667a&w=0&h=Ct4e1kIOdCOrEgvsQg4A1qeuQv944pPFORUQcaGw4oI=",
     date: "17 feb",
@@ -14,8 +13,7 @@ const nestedTreeData = [
   {
     id: 2,
     name: "Alice",
-    text: "to Bob",
-
+    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, nulla optio veritatis vel nobis velit saepe similique illo impedit dicta modi laudantium nam, quae incidunt nemo accusantium. Exercitationem, tempore. Voluptatibus?",
     image: "https://www.w3schools.com/howto/img_avatar2.png",
     date: "17 feb",
     parentId: 1,
@@ -23,7 +21,7 @@ const nestedTreeData = [
   {
     id: 3,
     name: "Bob",
-    text: "to Alice",
+    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, nulla optio veritatis vel nobis velit saepe similique illo impedit dicta modi laudantium nam, quae incidunt nemo accusantium. Exercitationem, tempore. Voluptatibus?",
 
     image:
       "https://media.istockphoto.com/photos/businessman-silhouette-as-avatar-or-default-profile-picture-picture-id476085198?b=1&k=20&m=476085198&s=170667a&w=0&h=Ct4e1kIOdCOrEgvsQg4A1qeuQv944pPFORUQcaGw4oI=",
@@ -33,7 +31,7 @@ const nestedTreeData = [
   {
     id: 3,
     name: "Tom",
-    text: "Cities",
+    text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, nulla optio veritatis vel nobis velit saepe similique illo impedit dicta modi laudantium nam, quae incidunt nemo accusantium. Exercitationem, tempore. Voluptatibus?",
     image:
       "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000",
     date: "17 feb",
@@ -86,7 +84,7 @@ export function Row({ item, level, children }) {
   return (
     <div key={`section-${item.id}`}>
       <div
-        className="row"
+        className="flex flex-col gap-3 mb-3 border rounded p-4"
         onClick={() => {
           console.log("clicked");
           setIsCollapsed(!isCollapsed);
@@ -96,20 +94,26 @@ export function Row({ item, level, children }) {
         }}
       >
         {/* avatar  */}
-        <div className="avatar">
+        <div className="flex items-center gap-2">
           {/* image */}
           <div>
-            <img width={50} src={item.image} alt="" />
+            <img className="rounded-full" width={30} src={item.image} alt="" />
           </div>
           {/* content */}
-          <div>
-            <p>{item.name}</p>
-            <p>{item.date}</p>
+
+          <div className="">
+            <p className="text-blue-500 font-medium text-base">{item.name}</p>
+            <p className="text-xs">{item.date}</p>
           </div>
         </div>
 
+        {/* message */}
         <div>
           <span className="">{item.text}</span>
+        </div>
+        {/*  */}
+        <div>
+          <button className="text-blue-500 opacity-80">reply</button>
         </div>
       </div>
 
@@ -120,9 +124,8 @@ export function Row({ item, level, children }) {
 }
 
 export function Tree({ treeData, parentId = 0, level = 0 }) {
-  const items = treeData
-    .filter((item) => item.parentId === parentId)
-    .sort((a, b) => (a.text > b.text ? 1 : -1));
+  const items = treeData.filter((item) => item.parentId === parentId);
+  // .sort((a, b) => (a.text > b.text ? 1 : -1));
 
   if (!items.length) return null;
 
@@ -144,7 +147,7 @@ function App() {
     setTreeData(getTreeData());
   }, []);
 
-  return <div>{treeData && <Tree treeData={treeData} />}</div>;
+  return <div className="m-52">{treeData && <Tree treeData={treeData} />}</div>;
 }
 
 export default App;
