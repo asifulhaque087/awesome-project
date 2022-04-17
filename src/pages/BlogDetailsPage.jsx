@@ -49,7 +49,7 @@ export function getTreeData(nestedTreeData) {
   }));
 }
 
-export function Row({ item, level, children }) {
+export function Row({ item, level, children, postId }) {
   const [state, setState] = useState({ name: "", content: null });
   const [isCollapsed, setIsCollapsed] = useState(true);
 
@@ -71,9 +71,16 @@ export function Row({ item, level, children }) {
       alert("Content must not be empty");
       return;
     }
-    console.log("parent id is ", item._id);
 
-    console.log("submitting", state);
+    axios
+      .post("http://localhost:3000/comment/", {
+        ...state,
+        parentId: item._id,
+        postId,
+      })
+      .then((res) => {
+        // fetchComments(id);
+      });
   };
   return (
     <div key={`section-${item._id}`}>
@@ -83,7 +90,7 @@ export function Row({ item, level, children }) {
         //   setIsCollapsed(!isCollapsed);
         // }}
         style={{
-          marginLeft: `${level * 10}px`,
+          marginLeft: `${level * 20}px`,
         }}
       >
         {/* avatar  */}
@@ -127,7 +134,7 @@ export function Row({ item, level, children }) {
                 onChange={handleChange}
                 type="text"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 focus:outline-none"
-                placeholder="title"
+                placeholder="name"
               />
             </div>
             <div>
@@ -159,7 +166,7 @@ export function Row({ item, level, children }) {
   );
 }
 
-export function Tree({ treeData, parentId = 0, level = 0 }) {
+export function Tree({ treeData, parentId = 0, level = 0, postId }) {
   const items = treeData.filter((item) => item.parentId === parentId);
   // .sort((a, b) => (a.text > b.text ? 1 : -1));
 
@@ -169,8 +176,13 @@ export function Tree({ treeData, parentId = 0, level = 0 }) {
     <>
       {items &&
         items.map((item) => (
-          <Row key={item._id} item={item} level={level}>
-            <Tree treeData={treeData} parentId={item._id} level={level + 1} />
+          <Row key={item._id} item={item} level={level} postId={postId}>
+            <Tree
+              treeData={treeData}
+              parentId={item._id}
+              level={level + 1}
+              postId={postId}
+            />
           </Row>
         ))}
     </>
@@ -219,10 +231,23 @@ const BlogDetailsPage = () => {
 
   const fetchComments = (postId) => {
     axios.get(`http://localhost:3000/comment/${postId}`).then((res) => {
-      let newData = res.data.map((item) => {
+      let track = {};
+
+      let newData = res.data.map((item, i) => {
         if (!item.parentId) {
           item["parentId"] = 0;
         }
+
+        if (track[item.name.trim()]) {
+          console.log("name exits");
+          item["image"] = track[item.name.trim()];
+        } else {
+          console.log("does not exits");
+          let img = `https://robohash.org/${i + 10}?size=200x200`;
+          item["image"] = img;
+          track[item.name.trim()] = img;
+        }
+
         return item;
       });
       setTreeData(getTreeData(newData));
@@ -240,7 +265,7 @@ const BlogDetailsPage = () => {
       <section className="text-gray-600 body-font">
         <div className="container mx-auto">
           {/* post */}
-          <div className="flex px-5 py-16 items-center justify-center flex-col">
+          <div className="flex px-5 pt-16 items-center justify-center flex-col">
             <div className="text-centerr lg:w-2/3 w-full">
               <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
                 {post.title}
@@ -250,7 +275,7 @@ const BlogDetailsPage = () => {
           </div>
 
           {/* comment form */}
-          <div className="lg:w-2/3 w-full mx-auto">
+          <div className="lg:w-2/3 w-full mx-auto mb-10">
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
                 <input
@@ -283,7 +308,7 @@ const BlogDetailsPage = () => {
           </div>
           {/* comment */}
           <div className="mx-auto lg:w-2/3 w-full">
-            {treeData && <Tree treeData={treeData} />}
+            {treeData && <Tree treeData={treeData} postId={id} />}
           </div>
         </div>
       </section>
