@@ -1,5 +1,6 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const nestedTreeData = [
   {
@@ -177,11 +178,27 @@ export function Tree({ treeData, parentId = 0, level = 0 }) {
 }
 
 const BlogDetailsPage = () => {
-  // const { id } = useParams();
-
   const [treeData, setTreeData] = useState([]);
+  const [post, setPost] = useState({});
+  const { id } = useParams();
+
+  const fetchPost = (id) => {
+    axios.get(`http://localhost:3000/post/${id}`).then((res) => {
+      console.log("res is ", res.data);
+      setPost(res.data);
+    });
+  };
+
+  const fetchComments = (postId) => {
+    axios.get(`http://localhost:3000/comment/${postId}`).then((res) => {
+      setTreeData(res.data);
+    });
+  };
+
   useEffect(() => {
-    setTreeData(getTreeData());
+    // setTreeData(getTreeData());
+    fetchPost(id);
+    // fetchComments(id);
   }, []);
 
   // return <div className="m-52">{treeData && <Tree treeData={treeData} />}</div>;
@@ -193,14 +210,10 @@ const BlogDetailsPage = () => {
           <div className="flex px-5 py-24 items-center justify-center flex-col">
             <div className="text-centerr lg:w-2/3 w-full">
               <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
-                Microdosing synth tattooed vexillologist
+                {post.title}
               </h1>
               <p className="mb-8 leading-relaxed">
-                Meggings kinfolk echo park stumptown DIY, kale chips beard
-                jianbing tousled. Chambray dreamcatcher trust fund, kitsch vice
-                godard disrupt ramps hexagon mustache umami snackwave tilde
-                chillwave ugh. Pour-over meditation PBR&amp;B pickled ennui
-                celiac mlkshk freegan photo booth af fingerstache pitchfork.
+                {post.content}
               </p>
             </div>
           </div>

@@ -30,8 +30,9 @@ const BlogListPage = () => {
       fetchPosts();
     });
   };
+
   const fetchPosts = () => {
-    axios.get("http://localhost:3000/post/", state).then((res) => {
+    axios.get("http://localhost:3000/post/").then((res) => {
       setPosts(res.data);
     });
   };
@@ -147,11 +148,9 @@ const BlogListPage = () => {
                     <h1 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">
                       {post.title}
                     </h1>
-                    <p className="leading-relaxed mb-3">
-                      {post.content}
-                    </p>
+                    <p className="leading-relaxed mb-3">{post.content}</p>
                     <Link
-                      to="/blogs/1"
+                      to={`/blogs/${post._id}`}
                       className="text-indigo-500 inline-flex items-center"
                     >
                       Learn More
