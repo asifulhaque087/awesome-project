@@ -4,6 +4,7 @@ import { getTreeData } from "../utility";
 
 const initialState = {
   comments: [],
+  isFormClose: true,
 };
 
 // First, create the thunk
@@ -21,8 +22,8 @@ const commentSlice = createSlice({
   name: "comment",
   initialState,
   reducers: {
-    increment: (state) => {
-      state.value += 1;
+    openForm: (state) => {
+      state.isFormClose = false;
     },
   },
   extraReducers: (builder) => {
@@ -48,5 +49,6 @@ const commentSlice = createSlice({
     });
   },
 });
+export const { openForm } = commentSlice.actions;
 
 export default commentSlice.reducer;

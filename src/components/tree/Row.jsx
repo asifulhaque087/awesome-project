@@ -37,6 +37,7 @@ const Row = ({ item, level, children, postId }) => {
       })
       .then((res) => {
         dispatch(getCommentByPostId(postId));
+        setIsCollapsed(true);
       });
   };
   return (
