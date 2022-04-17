@@ -5,12 +5,13 @@ import { Link } from "react-router-dom";
 import { getPosts } from "../store/postSlice";
 
 const BlogListPage = () => {
-  const [state, setState] = useState({ title: "", content: null });
-  // const [posts, setPosts] = useState([]);
-  const [modal, setModal] = useState(false);
+  // redux
   const dispatch = useDispatch();
   const { posts } = useSelector((state) => state.post);
-
+  // local
+  const [state, setState] = useState({ title: "", content: null });
+  const [modal, setModal] = useState(false);
+  // methods
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -31,18 +32,11 @@ const BlogListPage = () => {
     }
 
     axios.post("http://localhost:3000/post/", state).then((res) => {
-      fetchPosts();
-    });
-  };
-
-  const fetchPosts = () => {
-    axios.get("http://localhost:3000/post/").then((res) => {
-      // setPosts(res.data);
+      dispatch(getPosts());
     });
   };
 
   useEffect(() => {
-    // fetchPosts();
     dispatch(getPosts());
   }, []);
 

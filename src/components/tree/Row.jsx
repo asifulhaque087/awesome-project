@@ -1,7 +1,12 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { getCommentByPostId } from "../../store/commentSlice";
 
 const Row = ({ item, level, children, postId }) => {
+  // redux
+  const dispatch = useDispatch();
+  // local
   const [state, setState] = useState({ name: "", content: null });
   const [isCollapsed, setIsCollapsed] = useState(true);
 
@@ -15,7 +20,7 @@ const Row = ({ item, level, children, postId }) => {
     event.preventDefault();
 
     if (!state.name) {
-      alert("Title must not be empty");
+      alert("Name must not be empty");
       return;
     }
 
@@ -31,7 +36,7 @@ const Row = ({ item, level, children, postId }) => {
         postId,
       })
       .then((res) => {
-        // fetchComments(id);
+        dispatch(getCommentByPostId(postId));
       });
   };
   return (

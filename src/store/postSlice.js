@@ -3,7 +3,8 @@ import axios from "axios";
 
 const initialState = {
   posts: [],
-  value: 0,
+  post: {},
+  // value: 0,
 };
 
 // First, create the thunk
@@ -17,17 +18,30 @@ export const getPosts = createAsyncThunk(
   }
 );
 
+export const getPostById = createAsyncThunk(
+  // action type name
+  "post/getPostById",
+  // api call
+  async (id, thunkAPI) => {
+    const res = await axios.get(`http://localhost:3000/post/${id}`);
+    return res.data;
+  }
+);
+
 const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {
     increment: (state) => {
-      state.value += 1;
+      // state.value += 1;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(getPosts.fulfilled, (state, action) => {
       state.posts = action.payload;
+    });
+    builder.addCase(getPostById.fulfilled, (state, action) => {
+      state.post = action.payload;
     });
   },
 });

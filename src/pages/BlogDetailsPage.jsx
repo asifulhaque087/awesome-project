@@ -1,61 +1,20 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Tree from "../components/tree/Tree";
-
-// const nestedTreeData = [
-//   {
-//     _id: 1,
-//     name: "Bob",
-//     text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, nulla optio veritatis vel nobis velit saepe similique illo impedit dicta modi laudantium nam, quae incidunt nemo accusantium. Exercitationem, tempore. Voluptatibus?",
-//     image:
-//       "https://media.istockphoto.com/photos/businessman-silhouette-as-avatar-or-default-profile-picture-picture-id476085198?b=1&k=20&m=476085198&s=170667a&w=0&h=Ct4e1kIOdCOrEgvsQg4A1qeuQv944pPFORUQcaGw4oI=",
-//     date: "17 feb",
-//     parentId: 0,
-//   },
-//   {
-//     _id: 2,
-//     name: "Alice",
-//     text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, nulla optio veritatis vel nobis velit saepe similique illo impedit dicta modi laudantium nam, quae incidunt nemo accusantium. Exercitationem, tempore. Voluptatibus?",
-//     image: "https://www.w3schools.com/howto/img_avatar2.png",
-//     date: "17 feb",
-//     parentId: 1,
-//   },
-//   {
-//     _id: 3,
-//     name: "Bob",
-//     text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, nulla optio veritatis vel nobis velit saepe similique illo impedit dicta modi laudantium nam, quae incidunt nemo accusantium. Exercitationem, tempore. Voluptatibus?",
-
-//     image:
-//       "https://media.istockphoto.com/photos/businessman-silhouette-as-avatar-or-default-profile-picture-picture-id476085198?b=1&k=20&m=476085198&s=170667a&w=0&h=Ct4e1kIOdCOrEgvsQg4A1qeuQv944pPFORUQcaGw4oI=",
-//     date: "17 feb",
-//     parentId: 2,
-//   },
-//   {
-//     _id: 3,
-//     name: "Tom",
-//     text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, nulla optio veritatis vel nobis velit saepe similique illo impedit dicta modi laudantium nam, quae incidunt nemo accusantium. Exercitationem, tempore. Voluptatibus?",
-//     image:
-//       "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=2000",
-//     date: "17 feb",
-//     parentId: 0,
-//   },
-// ];
-
-export function getTreeData(nestedTreeData) {
-  return nestedTreeData.map((item) => ({
-    ...item,
-    hasChildren:
-      nestedTreeData.filter((i) => i.parentId === item._id).length > 0,
-  }));
-}
+import { getCommentByPostId } from "../store/commentSlice";
+import { getPostById } from "../store/postSlice";
 
 const BlogDetailsPage = () => {
+  // redux
+  const dispatch = useDispatch();
+  const { comments } = useSelector((state) => state.comment);
+  const { post } = useSelector((state) => state.post);
+  // local
   const [state, setState] = useState({ name: "", content: null });
-  const [treeData, setTreeData] = useState([]);
-  const [post, setPost] = useState({});
   const { id } = useParams();
-
+  // methods
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -66,7 +25,7 @@ const BlogDetailsPage = () => {
     event.preventDefault();
 
     if (!state.name) {
-      alert("Title must not be empty");
+      alert("Name must not be empty");
       return;
     }
 
@@ -78,48 +37,15 @@ const BlogDetailsPage = () => {
     axios
       .post("http://localhost:3000/comment/", { ...state, postId: id })
       .then((res) => {
-        fetchComments(id);
+        dispatch(getCommentByPostId(id));
       });
-
-  };
-
-  const fetchPost = (id) => {
-    axios.get(`http://localhost:3000/post/${id}`).then((res) => {
-      setPost(res.data);
-    });
-  };
-
-  const fetchComments = (postId) => {
-    axios.get(`http://localhost:3000/comment/${postId}`).then((res) => {
-      let track = {};
-
-      let newData = res.data.map((item, i) => {
-        if (!item.parentId) {
-          item["parentId"] = 0;
-        }
-
-        if (track[item.name.trim()]) {
-          console.log("name exits");
-          item["image"] = track[item.name.trim()];
-        } else {
-          console.log("does not exits");
-          let img = `https://robohash.org/${i + 10}?size=200x200`;
-          item["image"] = img;
-          track[item.name.trim()] = img;
-        }
-
-        return item;
-      });
-      setTreeData(getTreeData(newData));
-    });
   };
 
   useEffect(() => {
-    fetchPost(id);
-    fetchComments(id);
+    dispatch(getPostById(id));
+    dispatch(getCommentByPostId(id));
   }, []);
 
-  // return <div className="m-52">{treeData && <Tree treeData={treeData} />}</div>;
   return (
     <div>
       <section className="text-gray-600 body-font">
@@ -168,7 +94,7 @@ const BlogDetailsPage = () => {
           </div>
           {/* comment */}
           <div className="mx-auto lg:w-2/3 w-full">
-            {treeData && <Tree treeData={treeData} postId={id} />}
+            {comments && <Tree treeData={comments} postId={id} />}
           </div>
         </div>
       </section>
