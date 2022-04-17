@@ -44,7 +44,7 @@ const BlogDetailsPage = () => {
   useEffect(() => {
     dispatch(getPostById(id));
     dispatch(getCommentByPostId(id));
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>

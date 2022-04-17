@@ -42,7 +42,7 @@ const BlogListPage = () => {
     // console.log("pageNumber is ", pageNumber);
     dispatch(updatePages(pageNumber));
     dispatch(getPosts(page));
-  }, [page]);
+  }, [page]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>
