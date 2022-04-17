@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 
 const nestedTreeData = [
   {
@@ -38,38 +38,6 @@ const nestedTreeData = [
     date: "17 feb",
     parentId: 0,
   },
-  // { id: 4, text: "Citrus", parentId: 1 },
-  // { id: 5, text: "Stone fruits", parentId: 1 },
-  // { id: 6, text: "Berries", parentId: 1 },
-  // { id: 7, text: "Orange", parentId: 4 },
-  // { id: 8, text: "Grapefruit", parentId: 4 },
-  // { id: 9, text: "Lime", parentId: 4 },
-  // { id: 10, text: "Nectarine", parentId: 5 },
-  // { id: 11, text: "Apricot", parentId: 5 },
-  // { id: 12, text: "Peach", parentId: 5 },
-  // { id: 13, text: "Strawberry", parentId: 6 },
-  // { id: 14, text: "Raspberry", parentId: 6 },
-  // { id: 15, text: "Blueberry", parentId: 6 },
-  // { id: 16, text: "Darker", parentId: 2 },
-  // { id: 17, text: "Lighter", parentId: 2 },
-  // { id: 18, text: "MidnightBlue", parentId: 16 },
-  // { id: 19, text: "ForestGreen", parentId: 16 },
-  // { id: 20, text: "Maroon", parentId: 16 },
-  // { id: 21, text: "SkyBlue", parentId: 17 },
-  // { id: 22, text: "LightGray", parentId: 17 },
-  // { id: 23, text: "Khaki", parentId: 17 },
-  // { id: 24, text: "Europe", parentId: 3 },
-  // { id: 25, text: "America", parentId: 3 },
-  // { id: 26, text: "Asia", parentId: 3 },
-  // { id: 27, text: "Rome", parentId: 24 },
-  // { id: 28, text: "Berlin", parentId: 24 },
-  // { id: 29, text: "Madrid", parentId: 24 },
-  // { id: 30, text: "Beijing", parentId: 26 },
-  // { id: 31, text: "Chengdu", parentId: 26 },
-  // { id: 32, text: "Guangzhou", parentId: 26 },
-  // { id: 33, text: "Houston", parentId: 25 },
-  // { id: 34, text: "Los Angeles", parentId: 25 },
-  // { id: 35, text: "New York", parentId: 25 },
 ];
 
 export function getTreeData() {
@@ -81,7 +49,31 @@ export function getTreeData() {
 }
 
 export function Row({ item, level, children }) {
+  const [state, setState] = useState({ name: "", content: null });
   const [isCollapsed, setIsCollapsed] = useState(true);
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setState({ ...state, [name]: value });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!state.name) {
+      alert("Title must not be empty");
+      return;
+    }
+
+    if (!state.content) {
+      alert("Content must not be empty");
+      return;
+    }
+    console.log("parent id is ", item.id);
+
+    console.log("submitting", state);
+  };
   return (
     <div key={`section-${item.id}`}>
       <div
@@ -124,14 +116,38 @@ export function Row({ item, level, children }) {
           </button>
         </div>
         <div>
-          <input
-            className={`${
-              isCollapsed && "hidden"
-            } shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
-            id="username"
-            type="text"
-            placeholder="Username"
-          />
+          <form
+            onSubmit={handleSubmit}
+            className={`${isCollapsed && "hidden"}`}
+          >
+            <div className="mb-3">
+              <input
+                name="name"
+                onChange={handleChange}
+                type="text"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 focus:outline-none"
+                placeholder="title"
+              />
+            </div>
+            <div>
+              <textarea
+                name="content"
+                onChange={handleChange}
+                rows={4}
+                className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:outline-none"
+                placeholder="Content..."
+                defaultValue={""}
+              />
+            </div>
+            <div>
+              <button
+                className="my-2 block text-white bg-indigo-500 hover:bg-blue-800  font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                type="submit"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
         </div>
       </div>
 
@@ -161,7 +177,7 @@ export function Tree({ treeData, parentId = 0, level = 0 }) {
 }
 
 const BlogDetailsPage = () => {
-  const { id } = useParams();
+  // const { id } = useParams();
 
   const [treeData, setTreeData] = useState([]);
   useEffect(() => {
