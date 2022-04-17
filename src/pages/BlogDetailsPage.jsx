@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 
 const nestedTreeData = [
   {
-    id: 1,
+    _id: 1,
     name: "Bob",
     text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, nulla optio veritatis vel nobis velit saepe similique illo impedit dicta modi laudantium nam, quae incidunt nemo accusantium. Exercitationem, tempore. Voluptatibus?",
     image:
@@ -13,7 +13,7 @@ const nestedTreeData = [
     parentId: 0,
   },
   {
-    id: 2,
+    _id: 2,
     name: "Alice",
     text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, nulla optio veritatis vel nobis velit saepe similique illo impedit dicta modi laudantium nam, quae incidunt nemo accusantium. Exercitationem, tempore. Voluptatibus?",
     image: "https://www.w3schools.com/howto/img_avatar2.png",
@@ -21,7 +21,7 @@ const nestedTreeData = [
     parentId: 1,
   },
   {
-    id: 3,
+    _id: 3,
     name: "Bob",
     text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, nulla optio veritatis vel nobis velit saepe similique illo impedit dicta modi laudantium nam, quae incidunt nemo accusantium. Exercitationem, tempore. Voluptatibus?",
 
@@ -31,7 +31,7 @@ const nestedTreeData = [
     parentId: 2,
   },
   {
-    id: 3,
+    _id: 3,
     name: "Tom",
     text: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ea, nulla optio veritatis vel nobis velit saepe similique illo impedit dicta modi laudantium nam, quae incidunt nemo accusantium. Exercitationem, tempore. Voluptatibus?",
     image:
@@ -41,11 +41,11 @@ const nestedTreeData = [
   },
 ];
 
-export function getTreeData() {
+export function getTreeData(nestedTreeData) {
   return nestedTreeData.map((item) => ({
     ...item,
     hasChildren:
-      nestedTreeData.filter((i) => i.parentId === item.id).length > 0,
+      nestedTreeData.filter((i) => i.parentId === item._id).length > 0,
   }));
 }
 
@@ -71,12 +71,12 @@ export function Row({ item, level, children }) {
       alert("Content must not be empty");
       return;
     }
-    console.log("parent id is ", item.id);
+    console.log("parent id is ", item._id);
 
     console.log("submitting", state);
   };
   return (
-    <div key={`section-${item.id}`}>
+    <div key={`section-${item._id}`}>
       <div
         className="flex flex-col gap-3 mb-3 border rounded p-4"
         // onClick={() => {
@@ -96,13 +96,13 @@ export function Row({ item, level, children }) {
 
           <div className="">
             <p className="text-blue-500 font-medium text-base">{item.name}</p>
-            <p className="text-xs">{item.date}</p>
+            <p className="text-xs">{item.createdAt}</p>
           </div>
         </div>
 
         {/* message */}
         <div>
-          <span className="">{item.text}</span>
+          <span className="">{item.content}</span>
         </div>
         {/*  */}
         <div>
@@ -169,8 +169,8 @@ export function Tree({ treeData, parentId = 0, level = 0 }) {
     <>
       {items &&
         items.map((item) => (
-          <Row key={item.id} item={item} level={level}>
-            <Tree treeData={treeData} parentId={item.id} level={level + 1} />
+          <Row key={item._id} item={item} level={level}>
+            <Tree treeData={treeData} parentId={item._id} level={level + 1} />
           </Row>
         ))}
     </>
@@ -178,27 +178,60 @@ export function Tree({ treeData, parentId = 0, level = 0 }) {
 }
 
 const BlogDetailsPage = () => {
+  const [state, setState] = useState({ name: "", content: null });
   const [treeData, setTreeData] = useState([]);
   const [post, setPost] = useState({});
   const { id } = useParams();
 
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setState({ ...state, [name]: value });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!state.name) {
+      alert("Title must not be empty");
+      return;
+    }
+
+    if (!state.content) {
+      alert("Content must not be empty");
+      return;
+    }
+
+    axios
+      .post("http://localhost:3000/comment/", { ...state, postId: id })
+      .then((res) => {
+        fetchComments(id);
+      });
+
+    console.log("submitting", state);
+  };
+
   const fetchPost = (id) => {
     axios.get(`http://localhost:3000/post/${id}`).then((res) => {
-      console.log("res is ", res.data);
       setPost(res.data);
     });
   };
 
   const fetchComments = (postId) => {
     axios.get(`http://localhost:3000/comment/${postId}`).then((res) => {
-      setTreeData(res.data);
+      let newData = res.data.map((item) => {
+        if (!item.parentId) {
+          item["parentId"] = 0;
+        }
+        return item;
+      });
+      setTreeData(getTreeData(newData));
     });
   };
 
   useEffect(() => {
-    // setTreeData(getTreeData());
     fetchPost(id);
-    // fetchComments(id);
+    fetchComments(id);
   }, []);
 
   // return <div className="m-52">{treeData && <Tree treeData={treeData} />}</div>;
@@ -207,15 +240,46 @@ const BlogDetailsPage = () => {
       <section className="text-gray-600 body-font">
         <div className="container mx-auto">
           {/* post */}
-          <div className="flex px-5 py-24 items-center justify-center flex-col">
+          <div className="flex px-5 py-16 items-center justify-center flex-col">
             <div className="text-centerr lg:w-2/3 w-full">
               <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
                 {post.title}
               </h1>
-              <p className="mb-8 leading-relaxed">
-                {post.content}
-              </p>
+              <p className="mb-8 leading-relaxed">{post.content}</p>
             </div>
+          </div>
+
+          {/* comment form */}
+          <div className="lg:w-2/3 w-full mx-auto">
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <input
+                  name="name"
+                  onChange={handleChange}
+                  type="text"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 focus:outline-none"
+                  placeholder="name"
+                />
+              </div>
+              <div>
+                <textarea
+                  name="content"
+                  onChange={handleChange}
+                  rows={4}
+                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:outline-none"
+                  placeholder="Content..."
+                  defaultValue={""}
+                />
+              </div>
+              <div>
+                <button
+                  className="my-2 block text-white bg-indigo-500 hover:bg-blue-800  font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  type="submit"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
           </div>
           {/* comment */}
           <div className="mx-auto lg:w-2/3 w-full">
