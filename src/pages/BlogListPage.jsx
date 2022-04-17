@@ -1,11 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { getPosts } from "../store/postSlice";
 
 const BlogListPage = () => {
   const [state, setState] = useState({ title: "", content: null });
-  const [posts, setPosts] = useState([]);
+  // const [posts, setPosts] = useState([]);
   const [modal, setModal] = useState(false);
+  const dispatch = useDispatch();
+  const { posts } = useSelector((state) => state.post);
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -33,12 +37,13 @@ const BlogListPage = () => {
 
   const fetchPosts = () => {
     axios.get("http://localhost:3000/post/").then((res) => {
-      setPosts(res.data);
+      // setPosts(res.data);
     });
   };
 
   useEffect(() => {
-    fetchPosts();
+    // fetchPosts();
+    dispatch(getPosts());
   }, []);
 
   return (
