@@ -1,16 +1,18 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { getPosts } from "../store/postSlice";
+import { Link, useParams } from "react-router-dom";
+import Pagination from "../components/ui/Pagination";
+import { getPosts, updatePages } from "../store/postSlice";
 
 const BlogListPage = () => {
   // redux
   const dispatch = useDispatch();
-  const { posts } = useSelector((state) => state.post);
+  const { posts, page } = useSelector((state) => state.post);
   // local
   const [state, setState] = useState({ title: "", content: null });
   const [modal, setModal] = useState(false);
+  const { pageNumber = 1 } = useParams();
   // methods
   const handleChange = (event) => {
     const name = event.target.name;
@@ -37,11 +39,14 @@ const BlogListPage = () => {
   };
 
   useEffect(() => {
-    dispatch(getPosts());
-  }, []);
+    // console.log("pageNumber is ", pageNumber);
+    dispatch(updatePages(pageNumber));
+    dispatch(getPosts(page));
+  }, [page]);
 
   return (
     <div>
+      <Pagination />
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
           {/* new post button */}

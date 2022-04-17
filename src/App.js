@@ -4,11 +4,11 @@ import BlogDetailsPage from "./pages/BlogDetailsPage";
 import BlogListPage from "./pages/BlogListPage";
 
 function App() {
-
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<BlogListPage />} />
+        <Route path="/page/:pageNumber" element={<BlogListPage />} />
         <Route path="/blogs/:id" element={<BlogDetailsPage />} />
       </Routes>
     </div>

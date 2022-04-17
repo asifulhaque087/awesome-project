@@ -4,6 +4,8 @@ import axios from "axios";
 const initialState = {
   posts: [],
   post: {},
+  page: 1,
+  pages: 1,
   // value: 0,
 };
 
@@ -12,8 +14,8 @@ export const getPosts = createAsyncThunk(
   // action type name
   "post/getPosts",
   // api call
-  async (thunkAPI) => {
-    const res = await axios.get("http://localhost:3000/post/");
+  async (page, thunkAPI) => {
+    const res = await axios.get(`http://localhost:3000/post?page=${page}`);
     return res.data;
   }
 );
@@ -32,13 +34,19 @@ const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {
-    increment: (state) => {
-      // state.value += 1;
+    updatePages: (state, action) => {
+      state.pages = action.payload;
+    },
+    changePage: (state, action) => {
+      console.log("from change page", action.payload);
+      state.page = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(getPosts.fulfilled, (state, action) => {
-      state.posts = action.payload;
+      state.posts = action.payload.data;
+      state.page = action.payload.page;
+      state.pages = action.payload.pages;
     });
     builder.addCase(getPostById.fulfilled, (state, action) => {
       state.post = action.payload;
@@ -47,7 +55,7 @@ const postSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-// export const { increment, decrement, incrementByAmount } = postSlice.actions;
+export const { changePage, updatePages } = postSlice.actions;
 
 export default postSlice.reducer;
 // export const postReducer = postSlice.reducer
