@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { getCommentByPostId } from "../../store/commentSlice";
@@ -67,7 +68,9 @@ const Row = ({ item, level, children, postId }) => {
 
           <div className="">
             <p className="text-blue-500 font-medium text-base">{item.name}</p>
-            <p className="text-xs">{item.createdAt}</p>
+            <p className="text-xs">
+              {moment(item.createdAt).zone(0).format("MMM Do, YYYY")}
+            </p>
           </div>
         </div>
 

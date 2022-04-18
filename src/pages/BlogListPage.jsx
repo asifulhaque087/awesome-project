@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
@@ -155,7 +156,7 @@ const BlogListPage = () => {
                 <div key={post._id} className="p-4 lg:w-1/3">
                   <div className="h-full bg-gray-100 bg-opacity-75 px-8 pt-16 pb-24 rounded-lg overflow-hidden text-center relative">
                     <h2 className="tracking-widest text-xs title-font font-medium text-gray-400 mb-1">
-                      {post.createdAt}
+                      {moment(post.createdAt).zone(0).format("MMM Do, YYYY")}
                     </h2>
                     <h1 className="title-font sm:text-2xl text-xl font-medium text-gray-900 mb-3">
                       {post.title}
