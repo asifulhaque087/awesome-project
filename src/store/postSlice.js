@@ -15,14 +15,16 @@ export const getPosts = createAsyncThunk(
   "post/getPosts",
   // api call
   async (page, thunkAPI) => {
-    let api = `http://localhost:3000/post?page=${page}`;
+    let api;
 
     if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
       api = `http://localhost:3000/post?page=${page}`;
     } else {
       api = `https://awesome-project-backend.vercel.app/post?page=${page}`;
     }
-    const res = await axios.get(api);
+    const res = await axios.get(
+      `https://awesome-project-backend.vercel.app/post?page=${page}`
+    );
     return res.data;
   }
 );
