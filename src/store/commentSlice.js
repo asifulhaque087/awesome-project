@@ -13,7 +13,7 @@ export const getCommentByPostId = createAsyncThunk(
   "comment/getCommentByPostId",
   // api call
   async (postId, thunkAPI) => {
-    const res = await axios.get(`http://localhost:3000/comment/${postId}`);
+    const res = await axios.get(`/comment/${postId}`);
     return res.data;
   }
 );

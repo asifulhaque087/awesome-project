@@ -34,11 +34,9 @@ const BlogDetailsPage = () => {
       return;
     }
 
-    axios
-      .post("http://localhost:3000/comment/", { ...state, postId: id })
-      .then((res) => {
-        dispatch(getCommentByPostId(id));
-      });
+    axios.post("/comment/", { ...state, postId: id }).then((res) => {
+      dispatch(getCommentByPostId(id));
+    });
   };
 
   useEffect(() => {

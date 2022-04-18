@@ -15,8 +15,6 @@ export const getPosts = createAsyncThunk(
   "post/getPosts",
   // api call
   async (page, thunkAPI) => {
-    let api;
-
     const res = await axios.get(`/post?page=${page}`);
     return res.data;
   }
@@ -27,7 +25,7 @@ export const getPostById = createAsyncThunk(
   "post/getPostById",
   // api call
   async (id, thunkAPI) => {
-    const res = await axios.get(`http://localhost:3000/post/${id}`);
+    const res = await axios.get(`/post/${id}`);
     return res.data;
   }
 );
@@ -40,7 +38,6 @@ const postSlice = createSlice({
       state.pages = action.payload;
     },
     changePage: (state, action) => {
-      console.log("from change page", action.payload);
       state.page = action.payload;
     },
   },

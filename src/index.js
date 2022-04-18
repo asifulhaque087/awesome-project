@@ -10,11 +10,10 @@ import { store } from "./store/store";
 import axios from "axios";
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
-  console.log("from dev");
+  axios.defaults.baseURL = "http://localhost:3000";
 } else {
-  console.log("from prod");
+  axios.defaults.baseURL = "https://awesome-project-backend.vercel.app";
 }
-axios.defaults.baseURL = "https://awesome-project-backend.vercel.app";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

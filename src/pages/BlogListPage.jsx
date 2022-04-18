@@ -33,7 +33,7 @@ const BlogListPage = () => {
       return;
     }
 
-    axios.post("http://localhost:3000/post/", state).then((res) => {
+    axios.post("/post/", state).then((res) => {
       dispatch(getPosts());
     });
   };

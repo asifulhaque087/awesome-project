@@ -30,7 +30,7 @@ const Row = ({ item, level, children, postId }) => {
     }
 
     axios
-      .post("http://localhost:3000/comment/", {
+      .post("/comment/", {
         ...state,
         parentId: item._id,
         postId,
