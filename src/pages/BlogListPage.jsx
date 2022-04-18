@@ -34,7 +34,7 @@ const BlogListPage = () => {
     }
 
     axios.post("/post/", state).then((res) => {
-      dispatch(getPosts());
+      dispatch(getPosts(page));
     });
   };
 
@@ -62,7 +62,7 @@ const BlogListPage = () => {
               {/* backdrop */}
               <div
                 onClick={() => setModal(false)}
-                className="absolute z-10 top-0 left-0 right-0 bottom-0 bg-black opacity-80"
+                className="fixed z-10 top-0 left-0 right-0 bottom-0 bg-black opacity-80"
               />
               <div className="fixed z-20 top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] w-full max-w-md">
                 <div className="relative p-4 w-full max-w-2xl h-full md:h-auto">
