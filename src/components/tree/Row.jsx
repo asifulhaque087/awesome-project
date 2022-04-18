@@ -7,7 +7,7 @@ const Row = ({ item, level, children, postId }) => {
   // redux
   const dispatch = useDispatch();
   // local
-  const [state, setState] = useState({ name: "", content: null });
+  const [state, setState] = useState({ name: "", content: "" });
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const handleChange = (event) => {
@@ -38,8 +38,14 @@ const Row = ({ item, level, children, postId }) => {
       .then((res) => {
         dispatch(getCommentByPostId(postId));
         setIsCollapsed(true);
+        setState({
+          ...state,
+          name: "",
+          content: "",
+        });
       });
   };
+
   return (
     <div key={`section-${item._id}`}>
       <div
@@ -90,6 +96,7 @@ const Row = ({ item, level, children, postId }) => {
               <input
                 name="name"
                 onChange={handleChange}
+                value={state.name}
                 type="text"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 focus:outline-none"
                 placeholder="name"
@@ -99,10 +106,10 @@ const Row = ({ item, level, children, postId }) => {
               <textarea
                 name="content"
                 onChange={handleChange}
+                value={state.content}
                 rows={4}
                 className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:outline-none"
                 placeholder="Content..."
-                defaultValue={""}
               />
             </div>
             <div>

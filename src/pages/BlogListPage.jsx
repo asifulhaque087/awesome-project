@@ -10,7 +10,7 @@ const BlogListPage = () => {
   const dispatch = useDispatch();
   const { posts, page } = useSelector((state) => state.post);
   // local
-  const [state, setState] = useState({ title: "", content: null });
+  const [state, setState] = useState({ title: "", content: "" });
   const [modal, setModal] = useState(false);
   const { pageNumber = 1 } = useParams();
   // methods
@@ -35,6 +35,12 @@ const BlogListPage = () => {
 
     axios.post("/post/", state).then((res) => {
       dispatch(getPosts(page));
+      setState({
+        ...state,
+        title: "",
+        content: "",
+      });
+      setModal(false);
     });
   };
 
@@ -98,6 +104,7 @@ const BlogListPage = () => {
                           <input
                             name="title"
                             onChange={handleChange}
+                            value={state.title}
                             type="text"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 focus:outline-none"
                             placeholder="title"
@@ -107,10 +114,11 @@ const BlogListPage = () => {
                           <textarea
                             name="content"
                             onChange={handleChange}
+                            value={state.content}
                             rows={4}
                             className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:outline-none"
                             placeholder="Content..."
-                            defaultValue={""}
+                            // defaultValue={""}
                           />
                         </div>
                         <div>
