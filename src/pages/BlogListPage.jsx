@@ -46,7 +46,6 @@ const BlogListPage = () => {
 
   return (
     <div>
-      <Pagination />
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
           {/* new post button */}
@@ -140,6 +139,7 @@ const BlogListPage = () => {
             </>
           )}
 
+          <Pagination />
           <div className="flex flex-wrap -m-4">
             {/* 1st */}
             {posts &&
