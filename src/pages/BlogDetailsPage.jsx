@@ -12,7 +12,7 @@ const BlogDetailsPage = () => {
   const { comments } = useSelector((state) => state.comment);
   const { post } = useSelector((state) => state.post);
   // local
-  const [state, setState] = useState({ name: "", content: ""});
+  const [state, setState] = useState({ name: "", content: "" });
   const { id } = useParams();
   // methods
   const handleChange = (event) => {
@@ -54,7 +54,7 @@ const BlogDetailsPage = () => {
       <section className="text-gray-600 body-font">
         <div className="container mx-auto">
           {/* post */}
-          <div className="flex px-5 pt-16 items-center justify-center flex-col">
+          <div className="flex pt-16 items-center justify-center flex-col">
             <div className="text-centerr lg:w-2/3 w-full">
               <h1 className="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">
                 {post.title}
